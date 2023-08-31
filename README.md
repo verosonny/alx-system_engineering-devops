@@ -1,1 +1,1 @@
-This is a shell basics project
+My bety project is fun welcome to learn more
