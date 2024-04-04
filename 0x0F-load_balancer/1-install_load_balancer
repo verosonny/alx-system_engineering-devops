@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# This is a Bash that configure a New Server (Load Balancer) To meet a certain requirement as written below.
+
+sudo apt-get update -y
+sudo apt-get install haproxy -y
+
+# Configuration
+FILEPATH=/etc/haproxy/haproxy.cfg
+
+# Frontend Configuration
+FRONT="
+frontend my_frontend
+    bind *:80
+    mode http
+    default_backend my_backend"
+
+echo "$FRONT" | sudo tee -a "$FILEPATH"
+
+# Backend Configuration
+CONFIG="
+backend my_backend
+    balance roundrobin
+    server 328167-web-01 100.26.233.175:80 check
+    server 328167-web-02 35.174.207.19:80 check"
+
+echo "$CONFIG" | sudo tee -a "$FILEPATH"
+
+# Enabling haproxy to run on by default
+echo "ENDABLE=1" | sudo tee /etc/default/haproxy
+
+sudo service haproxy restart
